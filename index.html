@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+
+<body style="position:relative;height:100vh" onresize="resizeFrame()">
+    <div style="position: absolute; top:90%;left:25%">
+        <label>Intensity</label>
+        <input id="canvas-intensity" min="0" step="0.1" value="0" onchange="changeImageInten(this.value)"
+            type="number" />
+        <br>
+        <label>Block Size</label>
+        <input id="canvas-block-size" min="2" step="2" value="3" name="bs" onchange="changeImageCan(this)"
+            type="number" />
+        <br>
+        <label>Edge Size</label>
+        <input id="canvas-edge-size" min="2" step="2" value="5" name="es" onchange="changeImageCan(this)"
+            type="number" />
+        <br>
+    </div>
+    <img id="image" style="position: absolute;top:0%;left:0%;height:auto;width:75%" src="./assets/38193.jpg">
+    <iframe id="image-i" style="position: absolute;top:0%;left:0%;opacity:0" src="http://127.0.0.1:3000/opencv/3/5"
+        frameborder="0"></iframe>
+
+</body>
+<script>
+    function changeImageInten(value) {
+        if (value < 1) {
+            var frame = document.getElementById('image-i')
+            frame.style.opacity = value
+        }
+    }
+    function changeImageCan(values) {
+        let bs = document.getElementById('canvas-block-size').value
+        let es = document.getElementById('canvas-edge-size').value;
+        var frame = document.getElementById('image-i')
+        frame.setAttribute('src', `http://127.0.0.1:3000/opencv/${bs}/${es}`)
+        frame.contentWindow.onload = resizeIframe;
+    }
+    window.onload = function resizeFrame() {
+        var height = document.getElementById('image').clientHeight
+        var width = document.getElementById('image').clientWidth
+        var frame = document.getElementById('image-i')
+        frame.setAttribute('height', `${height}px`);
+        frame.setAttribute('width', `${width}px`);
+        frame.contentWindow.onload = resizeIframe;
+    }
+    function resizeIframe() {
+        var frame = document.getElementById('image-i')
+        var height = document.getElementById('image').clientHeight
+        var width = document.getElementById('image').clientWidth
+        frame.contentWindow.document.getElementById('canvasOutput').width = width;
+        frame.contentWindow.document.getElementById('canvasOutput').height = height;
+    } 
+</script>
+
+</html>
